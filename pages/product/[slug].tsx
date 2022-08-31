@@ -1,13 +1,24 @@
-import { Box, Button, Chip, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
+import { NextPage } from "next";
 import { ShopLayout } from "../../components/layouts"
 import { ProductSlideshow, SizeSelector } from "../../components/products";
 import { ItemCounter } from "../../components/ui";
-import { initialData } from "../../database/products"
+import { IProduct } from "../../interfaces";
+import { dbProducts } from "../../database";
+import { GetStaticPaths } from 'next';
+import { GetStaticProps } from 'next';
+import { getAllProductSlugs } from "../../database/dbProducts";
 
-const product = initialData.products[0];
 
+interface Props {
+  product: IProduct;
+}
 
-const ProductPage = () => {
+const ProductPage:NextPage<Props> = ({product}) => {
+
+  // const router = useRouter();
+  // const {products: product, isLoading} = useProducts(`/products/${router.query.slug}`);
+
   return (
     <ShopLayout title={"ABC"} pageDescription={product.description} >
       <Grid container spacing={3} >
@@ -51,5 +62,64 @@ const ProductPage = () => {
     </ShopLayout>
   )
 }
+
+// export const getServerSideProps: GetServerSideProps = async ({params}) => {
+
+//   const product = await dbProducts.getProductBySlug(params?.slug as string)
+
+  // if (!product) {
+  //   return {
+  //     redirect: {
+  //       destination: '/',
+  //       permanent: false
+  //     }
+  //   }
+  // }
+
+//   return {
+//     props: {
+//       product
+//     }
+//   }
+// }
+
+
+
+export const getStaticPaths: GetStaticPaths = async (ctx) => {
+  
+  const productsSlug = await getAllProductSlugs();
+
+  return {
+    paths: productsSlug.map(({slug}) => (
+      {
+        params: {slug}
+      }
+    )),
+    fallback: "blocking"
+  }
+}
+
+
+export const getStaticProps: GetStaticProps = async ({params}) => {
+  const product = await dbProducts.getProductBySlug(params?.slug as string);
+
+  if (!product) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false
+      }
+    }
+  }
+
+  return {
+    props: {
+      product
+    },
+    revalidate: 60 * 60 * 24
+  }
+}
+
+
 
 export default ProductPage
