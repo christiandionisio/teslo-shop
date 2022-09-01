@@ -1,9 +1,9 @@
 import { Box, Button, Card, CardContent, Divider, Grid, Typography } from '@mui/material';
-import React from 'react'
 import { CartList, OrderSummary } from '../../components/cart';
 import { ShopLayout } from '../../components/layouts';
 
 const CartPage = () => {
+
   return (
     <ShopLayout title='Carrito - 3' pageDescription='Carrito de compras de la tienda'>
         <>

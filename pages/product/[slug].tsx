@@ -1,13 +1,17 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Chip, Grid, Typography } from "@mui/material";
 import { NextPage } from "next";
 import { ShopLayout } from "../../components/layouts"
 import { ProductSlideshow, SizeSelector } from "../../components/products";
 import { ItemCounter } from "../../components/ui";
-import { IProduct } from "../../interfaces";
+import { ICartProduct, IProduct } from "../../interfaces";
 import { dbProducts } from "../../database";
 import { GetStaticPaths } from 'next';
 import { GetStaticProps } from 'next';
 import { getAllProductSlugs } from "../../database/dbProducts";
+import { useContext, useState } from "react";
+import { ISize } from '../../interfaces/products';
+import { useRouter } from "next/router";
+import { CartContext } from "../../context";
 
 
 interface Props {
@@ -16,11 +20,43 @@ interface Props {
 
 const ProductPage:NextPage<Props> = ({product}) => {
 
-  // const router = useRouter();
-  // const {products: product, isLoading} = useProducts(`/products/${router.query.slug}`);
+  const router = useRouter();
+
+  const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
+    _id: product._id,
+    image: product.images[0],
+    price: product.price,
+    size: undefined,
+    slug: product.slug,
+    title: product.title,
+    gender: product.gender,
+    quantity: 1,
+  });
+
+  const {addProductToCart} = useContext(CartContext);
+
+  const selectedSize = (size: ISize) => {
+    setTempCartProduct({
+      ...tempCartProduct,
+      size
+    })
+  }
+
+  const onAddProduct = () => {
+    if (!tempCartProduct.size) return;
+    addProductToCart(tempCartProduct);
+    router.push('/cart');
+  }
+
+  const updateQuantity = (quantity: number) => {
+    setTempCartProduct({
+      ...tempCartProduct,
+      quantity
+    });
+  }
 
   return (
-    <ShopLayout title={"ABC"} pageDescription={product.description} >
+    <ShopLayout title={product.title} pageDescription={product.description} >
       <Grid container spacing={3} >
         <Grid item xs={12} sm={7}>
           <ProductSlideshow 
@@ -37,19 +73,39 @@ const ProductPage:NextPage<Props> = ({product}) => {
             {/* Cantidad */}
             <Box sx={{my: 2}}>
               <Typography variant="subtitle2">Cantidad</Typography>
-              <ItemCounter />
+              <ItemCounter 
+                currentValue={tempCartProduct.quantity}
+                maxValue={product.inStock > 10 ? 10: product.inStock}
+                updateQuantity={updateQuantity}
+              />
               <SizeSelector 
-                // selectedSize={product.sizes[2]}
                 sizes={product.sizes}
+                selectedSize={tempCartProduct.size}
+                onSelectedSize={selectedSize}
               />
             </Box>
 
             {/* Agregar al carrito */}
-            <Button color="secondary" className="circular-btn">
-              Agregar al carrito
-            </Button>
 
-            {/* <Chip label="No hay disponibles" color="error" variant="outlined" /> */}
+            {
+              (product.inStock > 0)
+              ? (
+                <Button color="secondary" className="circular-btn"
+                  onClick={onAddProduct}
+                >
+                  {
+                    tempCartProduct.size
+                      ? 'Agregar al carrito'
+                      : 'Seleccione una talla'
+                  }
+                </Button>
+              )
+              : (
+                <Chip label="No hay disponibles" color="error" variant="outlined" />
+              )
+            }
+
+
 
             {/* Description */}
             <Box sx={{mt: 3}}>
