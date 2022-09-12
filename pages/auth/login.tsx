@@ -26,7 +26,7 @@ const LoginPage = () => {
 
     useEffect(() => {
       getProviders().then(prov => {
-        // console.log(prov);
+        console.log(prov);
         setProviders(prov);
       });
     }, []);
@@ -121,6 +121,7 @@ const LoginPage = () => {
                         <Grid item xs={12} display='flex' flexDirection='column' justifyContent='end'>
                             <Divider sx={{width: '100%', mb: 2}} />
                             {
+                                providers &&
                                 Object.values(providers).map((provider: any) => {
 
                                     if (provider.id === 'credentials') return (<div key='credentials'></div>)
