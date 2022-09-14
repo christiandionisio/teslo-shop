@@ -48,9 +48,6 @@ interface Props {
 
 const HistoryPage: NextPage<Props> = ({orders}) => {
 
-    console.log(orders);
-    
-
     const rows = orders.map((order, i) => ({
         id: i + 1,
         paid: order.isPaid,
