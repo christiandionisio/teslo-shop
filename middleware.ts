@@ -33,8 +33,7 @@ export async function middleware(req: NextRequest) {
         !validRoles.includes(session.user.role)) {
         return NextResponse.redirect(new URL('/api/auth/unauthorized', req.url));
     }
-
-
+    
 
     return NextResponse.next();
  
