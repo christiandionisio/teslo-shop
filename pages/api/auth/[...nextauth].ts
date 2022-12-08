@@ -24,7 +24,7 @@ export const authOptions = {
       async authorize(credentials) {
         console.log({credentials});
 
-        return await dbUsers.checkUserEmailPassword(credentials!.email, credentials!.password);
+        return await dbUsers.checkUserEmailPassword(credentials!.email, credentials!.password) as any;
       }
     }),
     GithubProvider({
