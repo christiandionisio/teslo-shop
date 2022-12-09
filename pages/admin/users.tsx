@@ -3,7 +3,7 @@ import { Grid, MenuItem, Select } from '@mui/material';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react'
 import useSWR from 'swr';
-import { tesloApi } from '../../apiTeslo';
+import { tesloApi } from '../../axiosApi';
 import { AdminLayout } from '../../components/layouts';
 import { IUser } from '../../interfaces';
 

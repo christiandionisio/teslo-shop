@@ -3,7 +3,7 @@ import { AuthLayout } from '../../components/layouts';
 import NextLink from 'next/link';
 import { useForm } from 'react-hook-form';
 import { useContext, useState } from 'react';
-import { tesloApi } from '../../apiTeslo';
+import { tesloApi } from '../../axiosApi';
 import { ErrorOutline } from '@mui/icons-material';
 import { validations } from '../../utils';
 import { useRouter } from 'next/router';

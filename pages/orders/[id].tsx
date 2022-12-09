@@ -7,7 +7,7 @@ import { getSession } from 'next-auth/react';
 import { dbOrders } from '../../database';
 import { IOrder } from '../../interfaces';
 import { PayPalButtons } from '@paypal/react-paypal-js';
-import tesloApi from '../../apiTeslo/tesloApi';
+import tesloApi from '../../axiosApi/tesloApi';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 

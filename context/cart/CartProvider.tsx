@@ -2,7 +2,7 @@ import { FC, useEffect, useReducer, useState } from 'react';
 import Cookie from 'js-cookie';
 import { ICartProduct, IOrder, ShippingAddress } from '../../interfaces';
 import { CartContext, cartReducer } from './';
-import tesloApi from '../../apiTeslo/tesloApi';
+import tesloApi from '../../axiosApi/tesloApi';
 import axios, { AxiosError } from 'axios';
 
 
